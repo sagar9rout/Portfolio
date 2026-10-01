@@ -1,16 +1,12 @@
 import { useEffect, useRef, useState } from 'react';
-import animeImg from '../assets/anime-splatter.jpeg';
 
-const TimelineItem = ({ period, place, detail, active }) => (
-  <div style={{ display:'flex', gap:'1.2rem', padding:'1.2rem 0', borderBottom:'1px solid rgba(12,12,12,.08)' }}>
-    <div style={{ flexShrink:0, width:4, background: active ? 'var(--blood)' : 'var(--ash)', borderRadius:2, alignSelf:'stretch', minHeight:50 }}/>
-    <div>
-      <div style={{ fontFamily:"'Noto Serif JP',serif", fontSize:'.62rem', color: active ? 'var(--blood)' : 'var(--ash)', letterSpacing:'.2em', marginBottom:3 }}>{period}</div>
-      <div style={{ fontFamily:"'Cinzel Decorative',cursive", fontSize:'.72rem', fontWeight:700, color:'var(--ink)', letterSpacing:'.04em', marginBottom:4, lineHeight:1.4 }}>{place}</div>
-      <div style={{ fontFamily:"'Cormorant Garamond',serif", fontSize:'.95rem', color:'var(--ink-mid)', lineHeight:1.75, fontStyle:'italic' }}>{detail}</div>
-    </div>
-  </div>
-);
+const focusAreas = [
+  { num:'01', title:'Identity & Access Management',          desc:'RBAC, Zero Trust, Keycloak, privilege escalation simulation' },
+  { num:'02', title:'Vulnerability Assessment & Web Security', desc:'OWASP Top 10, DVWA, Metasploitable2, Burp Suite' },
+  { num:'03', title:'OSINT & Reconnaissance',               desc:'Network enumeration, Nmap, information gathering techniques' },
+  { num:'04', title:'Cloud Security',                       desc:'Cloud IAM policies, attack paths, misconfigurations' },
+  { num:'05', title:'AI-assisted Security Engineering',     desc:'Python pipelines, decision systems, AI-assisted analysis' },
+];
 
 const About = () => {
   const [vis, setVis] = useState(false);
@@ -22,102 +18,106 @@ const About = () => {
   }, []);
 
   return (
-    <div ref={ref} style={{ background:'var(--bg)', borderTop:'4px solid var(--ink)' }}>
+    <div ref={ref} style={{ background:'var(--bg-1)', borderTop:'1px solid var(--border)' }}>
+      <div className="container" style={{ padding:'6rem 2rem' }}>
 
-      <div className="chapter-bar">
-        <span style={{ fontFamily:"'Noto Serif JP',serif", color:'rgba(255,255,255,.7)', fontSize:'.63rem', letterSpacing:'.4em' }}>第二章 · CHAPTER II</span>
-        <span style={{ fontFamily:"'Cinzel Decorative',cursive", color:'#fff', fontSize:'.72rem', letterSpacing:'.3em', fontWeight:700 }}>ABOUT THE WARRIOR</span>
-        <span style={{ fontFamily:"'Noto Serif JP',serif", color:'var(--blood)', fontSize:'.62rem', letterSpacing:'.3em' }}>武士道</span>
-      </div>
+        <div style={{ opacity:vis?1:0, transform:vis?'none':'translateY(20px)', transition:'all .7s ease' }}>
+          <div className="section-label">ABOUT</div>
 
-      <div style={{ display:'flex', minHeight:'calc(100vh - 56px)' }} className="stack-m">
+          <div style={{ display:'grid', gridTemplateColumns:'1fr 1fr', gap:'5rem', alignItems:'start' }} className="col-m">
 
-        {/* LEFT — anime-splatter image: high visibility */}
-        <div className="hide-m" style={{
-          width:'42%', position:'relative', borderRight:'3px solid var(--ink)', overflow:'hidden',
-          opacity:vis?1:0, transform:vis?'none':'translateX(-30px)', transition:'all .85s ease',
-        }}>
-          {/* Image fills the whole panel — minimal filter */}
-          <img src={animeImg} alt=""
-            style={{
-              position:'absolute', inset:0,
-              width:'100%', height:'100%',
-              objectFit:'cover', objectPosition:'30% top',
-              display:'block',
-              filter:'grayscale(20%) brightness(.85) contrast(1.15)',
-              zIndex:1,
-            }}
-          />
-
-          {/* Minimal left-bottom gradient only for quote readability */}
-          <div style={{
-            position:'absolute', inset:0, zIndex:2,
-            background:'linear-gradient(to bottom, rgba(255,255,255,0) 40%, rgba(255,255,255,0.75) 85%, rgba(255,255,255,0.92) 100%)',
-          }}/>
-
-          {/* Quote box — sits above gradient */}
-          <div className="manga-panel" style={{
-            position:'absolute', bottom:'3rem', left:'2rem', right:'2rem', zIndex:3,
-            padding:'1.5rem', background:'rgba(255,255,255,.92)', backdropFilter:'blur(8px)',
-          }}>
-            <div style={{ fontFamily:"'Noto Serif JP',serif", fontSize:'.6rem', color:'var(--blood)', letterSpacing:'.3em', marginBottom:6 }}>武士道の言葉</div>
-            <p style={{ fontFamily:"'Cormorant Garamond',serif", fontSize:'1.05rem', fontStyle:'italic', color:'var(--ink)', lineHeight:1.85 }}>
-              "A warrior does not give up what he loves — he finds the love in what he does."
-            </p>
-          </div>
-
-          {/* Chapter tag top-right */}
-          <div style={{
-            position:'absolute', top:'2rem', right:'2rem', zIndex:3,
-            background:'var(--blood)', color:'#fff', padding:'.4rem .8rem',
-            fontFamily:"'Cinzel Decorative',cursive", fontSize:'.55rem', letterSpacing:'.2em',
-          }}>ABOUT · 武</div>
-        </div>
-
-        {/* RIGHT — content */}
-        <div style={{
-          flex:1, padding:'4rem',
-          display:'flex', flexDirection:'column', justifyContent:'center',
-          opacity:vis?1:0, transform:vis?'none':'translateX(30px)', transition:'all .85s ease .2s',
-        }}>
-          <div className="stag">
-            <span className="stag-num">02</span>
-            <div className="stag-dash"/>
-            <span className="stag-title">ABOUT ME</span>
-            <div className="stag-line"/>
-          </div>
-
-          <p style={{
-            fontFamily:"'Cormorant Garamond',serif", fontSize:'1.12rem',
-            lineHeight:2, color:'var(--ink-mid)',
-            borderLeft:'3px solid var(--blood)', paddingLeft:'1.5rem', marginBottom:'2.5rem',
-          }}>
-            MCA graduate with working knowledge of <strong style={{color:'var(--ink)'}}>Java, Python</strong>,
-            and front-end technologies including <strong style={{color:'var(--ink)'}}>HTML, CSS, and JavaScript</strong>.
-            Enthusiastic fresher seeking an entry-level IT role to apply technical knowledge,
-            contribute to development teams, and continuously enhance skills.
-          </p>
-
-          <div style={{ display:'grid', gridTemplateColumns:'1fr 1fr', gap:'2rem', marginBottom:'2.5rem' }} className="grid-m1">
+            {/* Left */}
             <div>
-              <h3 style={{ fontFamily:"'Cinzel Decorative',cursive", fontSize:'.65rem', letterSpacing:'.25em', color:'var(--ink)', borderBottom:'1.5px solid var(--ink)', paddingBottom:8, marginBottom:'1rem' }}>EDUCATION</h3>
-              <TimelineItem period="OCT 2024 – PRESENT" place="GIET, Technocrats" detail="MCA · Current SGPA: 8.67" active={true}/>
-              <TimelineItem period="PASSED 2024" place="Mahima Mahavidyalaya, Joranda" detail="B.Sc Mathematics · Utkal University" active={false}/>
-            </div>
-            <div>
-              <h3 style={{ fontFamily:"'Cinzel Decorative',cursive", fontSize:'.65rem', letterSpacing:'.25em', color:'var(--ink)', borderBottom:'1.5px solid var(--ink)', paddingBottom:8, marginBottom:'1rem' }}>INTERNSHIP</h3>
-              <TimelineItem period="2 MONTHS" place="CTTC, Bhubaneswar" detail="Data Analyst Intern — Analyzed real-world datasets, identified trends & patterns, translated raw data into actionable reports." active={true}/>
-              <TimelineItem period="2 MONTHS" place="ThreatSys" detail="Cybersecurity Intern — Gained foundational knowledge in cybersecurity principles & practices." active={false}/>
-            </div>
-          </div>
+              {/* Small JP accent */}
+              <div style={{
+                fontFamily:"'Noto Serif JP',serif",
+                fontSize:'.72rem', color:'var(--red)',
+                letterSpacing:'.3em', marginBottom:'1rem',
+                opacity:.7,
+              }}>浪人 · RONIN</div>
 
-          <div style={{ display:'flex', border:'2px solid var(--ink)', overflow:'hidden' }}>
-            {[{v:'OS-CIT',l:'Certified · Odisha'},{v:'8.67',l:'Current SGPA',dark:true},{v:'Co-ord',l:'GIET Hackfest 2025'}].map((s,i)=>(
-              <div key={i} style={{ flex:1, padding:'1.1rem', textAlign:'center', borderRight:i<2?'2px solid var(--ink)':'none', background:s.dark?'var(--ink)':'transparent' }}>
-                <div style={{ fontFamily:"'Cinzel Decorative',cursive", fontSize:'.95rem', fontWeight:700, color:s.dark?'#fff':'var(--blood)', marginBottom:4 }}>{s.v}</div>
-                <div style={{ fontFamily:"'Cormorant Garamond',serif", fontSize:'.72rem', color:s.dark?'rgba(255,255,255,.65)':'var(--ash)', letterSpacing:'.1em', textTransform:'uppercase' }}>{s.l}</div>
+              <h2 style={{
+                fontFamily:"'Cinzel',serif",
+                fontSize:'clamp(1.6rem,3vw,2.4rem)',
+                fontWeight:600, color:'#fff',
+                lineHeight:1.2, marginBottom:'1.8rem',
+              }}>
+                SUPRIT SAGAR ROUT
+              </h2>
+
+              <p style={{
+                fontFamily:"'Inter',sans-serif",
+                fontSize:'1rem', color:'var(--text-dim)',
+                lineHeight:1.85, marginBottom:'1.5rem',
+                borderLeft:'2px solid var(--red)',
+                paddingLeft:'1.2rem',
+              }}>
+                MCA graduate building hands-on cybersecurity experience through
+                practical labs, security testing, identity and access management,
+                and software engineering projects.
+              </p>
+
+              <p style={{
+                fontFamily:"'Inter',sans-serif",
+                fontSize:'1rem', color:'var(--text-dim)',
+                lineHeight:1.85, marginBottom:'2.5rem',
+              }}>
+                My current focus is understanding how systems, identities, and
+                applications can be attacked, investigated, and secured — building
+                real projects as proof of that understanding.
+              </p>
+
+              {/* Quick facts */}
+              <div style={{ display:'grid', gridTemplateColumns:'1fr 1fr', gap:'1rem' }}>
+                {[
+                  { label:'DEGREE',   val:'MCA' },
+                  { label:'SGPA',     val:'9.25' },
+                  { label:'LOCATION', val:'Odisha, India' },
+                  { label:'STATUS',   val:'Available' },
+                ].map(item => (
+                  <div key={item.label} style={{
+                    background:'var(--bg-3)',
+                    border:'1px solid var(--border)',
+                    padding:'.8rem 1rem',
+                  }}>
+                    <div style={{ fontFamily:"'IBM Plex Mono',monospace", fontSize:'.58rem', color:'var(--red)', letterSpacing:'.15em', marginBottom:3 }}>{item.label}</div>
+                    <div style={{ fontFamily:"'Inter',sans-serif", fontSize:'.88rem', color:'#fff', fontWeight:500 }}>{item.val}</div>
+                  </div>
+                ))}
               </div>
-            ))}
+            </div>
+
+            {/* Right — Focus areas */}
+            <div>
+              <div style={{ fontFamily:"'IBM Plex Mono',monospace", fontSize:'.68rem', color:'var(--text-faint)', letterSpacing:'.18em', marginBottom:'1.5rem' }}>
+                // CURRENT FOCUS
+              </div>
+
+              <div style={{ display:'flex', flexDirection:'column', gap:'.6rem' }}>
+                {focusAreas.map((item, i) => (
+                  <div key={item.num}
+                    style={{
+                      display:'flex', gap:'1.2rem', alignItems:'flex-start',
+                      padding:'1rem 1.2rem',
+                      background:'var(--bg-2)',
+                      border:'1px solid var(--border)',
+                      transition:'border-color .25s, background .25s',
+                      cursor:'default',
+                      opacity:vis?1:0,
+                      transform:vis?'none':'translateX(20px)',
+                      transitionDelay:`${.1 + i*.06}s`,
+                    }}
+                    onMouseEnter={e => { e.currentTarget.style.borderColor='var(--border-hi)'; e.currentTarget.style.background='var(--bg-3)'; }}
+                    onMouseLeave={e => { e.currentTarget.style.borderColor='var(--border)'; e.currentTarget.style.background='var(--bg-2)'; }}>
+                    <span style={{ fontFamily:"'IBM Plex Mono',monospace", fontSize:'.7rem', color:'var(--red)', flexShrink:0, marginTop:2 }}>{item.num}</span>
+                    <div>
+                      <div style={{ fontFamily:"'Inter',sans-serif", fontSize:'.9rem', fontWeight:600, color:'#fff', marginBottom:3 }}>{item.title}</div>
+                      <div style={{ fontFamily:"'IBM Plex Mono',monospace", fontSize:'.65rem', color:'var(--text-faint)', lineHeight:1.6 }}>{item.desc}</div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
           </div>
         </div>
       </div>

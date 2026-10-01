@@ -1,137 +1,144 @@
 import { useState, useEffect } from 'react';
 
 const NAV = [
-  { label:'HOME',     kanji:'道', key:'homeRef' },
-  { label:'ABOUT',    kanji:'武', key:'aboutRef' },
-  { label:'SKILLS',   kanji:'技', key:'skillsRef' },
-  { label:'PROJECTS', kanji:'業', key:'projectsRef' },
-  { label:'CONTACT',  kanji:'縁', key:'contactRef' },
+  { label: 'ABOUT',      key: 'aboutRef' },
+  { label: 'PROJECTS',   key: 'projectsRef' },
+  { label: 'SKILLS',     key: 'skillsRef' },
+  { label: 'EXPERIENCE', key: 'experienceRef' },
+  { label: 'CONTACT',    key: 'contactRef' },
 ];
 
 const Navbar = ({ scrollTo, refs }) => {
   const [scrolled, setScrolled] = useState(false);
   const [open, setOpen]         = useState(false);
-  const [active, setActive]     = useState('homeRef');
 
   useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 50);
-    window.addEventListener('scroll', onScroll);
-    return () => window.removeEventListener('scroll', onScroll);
+    const fn = () => setScrolled(window.scrollY > 40);
+    window.addEventListener('scroll', fn);
+    return () => window.removeEventListener('scroll', fn);
   }, []);
 
-  const go = key => { scrollTo(refs[key]); setOpen(false); setActive(key); };
+  const go = key => { scrollTo(refs[key]); setOpen(false); };
 
-  /* 
-   * KEY FIX: Navbar is ALWAYS visible.
-   * - Starts with white semi-transparent bg so it never disappears on white page.
-   * - Scrolled state adds full white + shadow.
-   * - NO animation that could hide it (removed slideDown animation).
-   */
+  const borderB = scrolled ? '1px solid var(--border)' : '1px solid transparent';
+
   return (
     <>
       <nav style={{
-        position:'fixed', top:0, width:'100%', zIndex:1000,
-        background: scrolled
-          ? 'rgba(255,255,255,0.97)'
-          : 'rgba(255,255,255,0.82)',          /* always at least 82% opaque */
-        backdropFilter:'blur(16px)',
-        borderBottom: scrolled
-          ? '2px solid var(--ink)'
-          : '1px solid rgba(12,12,12,0.12)',   /* subtle border always */
-        boxShadow: scrolled
-          ? '0 2px 24px rgba(0,0,0,.1)'
-          : '0 1px 8px rgba(0,0,0,.04)',
-        transition:'background .3s ease, border-color .3s ease, box-shadow .3s ease',
+        position: 'fixed', top: 0, width: '100%', zIndex: 1000,
+        background: scrolled ? 'rgba(13,13,13,.96)' : 'rgba(13,13,13,.0)',
+        backdropFilter: 'blur(12px)',
+        borderBottom: borderB,
+        transition: 'all .35s ease',
       }}>
-        <div style={{
-          maxWidth:1400, margin:'0 auto', padding:'0 3rem',
-          height:72, display:'flex', justifyContent:'space-between', alignItems:'center',
+        <div className="container" style={{
+          height: 64,
+          display: 'flex',
+          justifyContent: 'space-between',
+          alignItems: 'center',
         }}>
 
           {/* LOGO */}
-          <button onClick={() => go('homeRef')}
-            style={{background:'none',border:'none',cursor:'pointer',display:'flex',alignItems:'center',gap:10}}>
+          <button onClick={() => scrollTo(refs.homeRef)}
+            style={{ background:'none', border:'none', cursor:'pointer', display:'flex', alignItems:'center', gap:'0.6rem' }}>
             <div style={{
-              width:38, height:38, border:'2.5px solid var(--ink)',
-              display:'flex', alignItems:'center', justifyContent:'center', position:'relative', flexShrink:0,
+              width: 28, height: 28,
+              border: '1px solid var(--red)',
+              display: 'flex', alignItems: 'center', justifyContent: 'center',
             }}>
-              <div style={{position:'absolute',inset:4,border:'1px solid var(--blood)'}}/>
-              <span style={{fontFamily:"'Cinzel Decorative',cursive",fontWeight:900,fontSize:'.85rem',color:'var(--ink)',lineHeight:1}}>S</span>
+              <span style={{ fontFamily:"'IBM Plex Mono',monospace", fontSize:'.65rem', color:'var(--red)', fontWeight:600 }}>
+                //
+              </span>
             </div>
-            <div>
-              <div style={{fontFamily:"'Cinzel Decorative',cursive",fontWeight:900,fontSize:'.8rem',letterSpacing:'.2em',color:'var(--ink)',lineHeight:1}}>SUPRIT</div>
-              <div style={{fontFamily:"'Noto Serif JP',serif",fontSize:'.5rem',color:'var(--blood)',letterSpacing:'.3em',lineHeight:1.6}}>侍の開発者</div>
-            </div>
+            <span style={{
+              fontFamily: "'IBM Plex Mono',monospace",
+              fontSize: '.88rem', fontWeight: 600,
+              color: '#fff', letterSpacing: '.1em',
+            }}>RONIN.SH</span>
           </button>
 
-          {/* Desktop nav links */}
-          <div className="hide-m" style={{display:'flex',gap:'2.8rem',alignItems:'center'}}>
-            {NAV.map(item => {
-              const isActive = active === item.key;
-              return (
-                <button key={item.key} onClick={() => go(item.key)} style={{
+          {/* Desktop links */}
+          <div className="hide-m" style={{ display:'flex', alignItems:'center', gap:'2.5rem' }}>
+            {NAV.map(item => (
+              <button key={item.key} onClick={() => go(item.key)}
+                style={{
                   background:'none', border:'none', cursor:'pointer',
-                  display:'flex', flexDirection:'column', alignItems:'center', gap:3,
-                  padding:'.3rem 0', position:'relative',
-                }}>
-                  <span style={{
-                    fontFamily:"'Noto Serif JP',serif", fontSize:'.62rem',
-                    color: isActive ? 'var(--blood)' : 'var(--ash)',
-                    lineHeight:1, transition:'color .3s',
-                  }}>{item.kanji}</span>
-                  <span style={{
-                    fontFamily:"'Cinzel Decorative',cursive",
-                    fontSize:'.72rem', fontWeight:700, letterSpacing:'.22em',
-                    color: isActive ? 'var(--blood)' : 'var(--ink)',
-                    lineHeight:1, transition:'color .3s',
-                  }}>{item.label}</span>
-                  {/* Active underline */}
-                  <span style={{
-                    position:'absolute', bottom:-6, left:0, right:0,
-                    height:2, background:'var(--blood)',
-                    transform: isActive ? 'scaleX(1)' : 'scaleX(0)',
-                    transformOrigin:'left',
-                    transition:'transform .3s ease',
-                  }}/>
-                </button>
-              );
-            })}
+                  fontFamily:"'IBM Plex Mono',monospace",
+                  fontSize:'.7rem', letterSpacing:'.15em',
+                  color:'var(--text-dim)',
+                  transition:'color .2s',
+                  padding:'.25rem 0',
+                }}
+                onMouseEnter={e => e.currentTarget.style.color = '#fff'}
+                onMouseLeave={e => e.currentTarget.style.color = 'var(--text-dim)'}>
+                {item.label}
+              </button>
+            ))}
+            <a href="/assets/resume.pdf" download
+              className="btn btn-primary"
+              style={{ padding:'.5rem 1.1rem', fontSize:'.68rem' }}>
+              RESUME
+            </a>
           </div>
 
-          {/* Hamburger — mobile only */}
-          <button onClick={() => setOpen(!open)} className="ham-btn"
-            style={{background:'none',border:'none',cursor:'pointer',display:'none',flexDirection:'column',gap:5,padding:'4px'}}>
-            {[0,1,2].map(i=>(
-              <span key={i} style={{display:'block',width:26,height:2.5,background:'var(--ink)',borderRadius:2,transition:'all .3s'}}/>
+          {/* Hamburger */}
+          <button onClick={() => setOpen(!open)}
+            className="mobile-ham"
+            style={{
+              background:'none', border:'none', cursor:'pointer',
+              display:'none', flexDirection:'column', gap:5,
+            }}>
+            {[0,1,2].map(i => (
+              <span key={i} style={{
+                display:'block', width:22, height:1.5,
+                background: open && i===1 ? 'var(--red)' : 'var(--text)',
+                transition:'all .3s',
+              }}/>
             ))}
           </button>
         </div>
       </nav>
 
-      {/* Mobile full-screen menu */}
+      {/* Mobile menu */}
       {open && (
         <div style={{
-          position:'fixed', inset:0, background:'var(--bg)', zIndex:999,
-          display:'flex', flexDirection:'column', alignItems:'center', justifyContent:'center', gap:'2.5rem',
+          position:'fixed', inset:0, background:'rgba(13,13,13,.98)',
+          backdropFilter:'blur(20px)',
+          zIndex:999, display:'flex', flexDirection:'column',
+          alignItems:'center', justifyContent:'center', gap:'2rem',
         }}>
-          <button onClick={() => setOpen(false)}
-            style={{position:'absolute',top:'1.5rem',right:'2rem',background:'none',border:'none',fontSize:'1.6rem',cursor:'pointer',color:'var(--ink)',lineHeight:1}}>
-            ✕
-          </button>
+          <button onClick={() => setOpen(false)} style={{
+            position:'absolute', top:'1.5rem', right:'1.5rem',
+            background:'none', border:'none', color:'var(--text-dim)',
+            fontSize:'1.2rem', cursor:'pointer',
+          }}>✕</button>
+
+          <span style={{
+            fontFamily:"'IBM Plex Mono',monospace",
+            fontSize:'1rem', color:'var(--red)', letterSpacing:'.2em',
+            marginBottom:'1rem',
+          }}>RONIN.SH</span>
+
           {NAV.map(item => (
             <button key={item.key} onClick={() => go(item.key)}
-              style={{background:'none',border:'none',cursor:'pointer',textAlign:'center'}}>
-              <div style={{fontFamily:"'Noto Serif JP',serif",fontSize:'2rem',color:'var(--blood)',marginBottom:4}}>{item.kanji}</div>
-              <div style={{fontFamily:"'Cinzel Decorative',cursive",fontSize:'.9rem',letterSpacing:'.3em',color:'var(--ink)',fontWeight:700}}>{item.label}</div>
+              style={{
+                background:'none', border:'none', cursor:'pointer',
+                fontFamily:"'IBM Plex Mono',monospace",
+                fontSize:'.85rem', letterSpacing:'.2em', color:'var(--text)',
+              }}>
+              {item.label}
             </button>
           ))}
+          <a href="/assets/resume.pdf" download className="btn btn-primary" style={{marginTop:'1rem'}}>
+            DOWNLOAD RESUME
+          </a>
         </div>
       )}
 
       <style>{`
         @media(max-width:900px){
-          .hide-m  { display:none !important; }
-          .ham-btn { display:flex !important; }
+          .hide-m { display:none !important; }
+          .mobile-ham { display:flex !important; }
         }
       `}</style>
     </>

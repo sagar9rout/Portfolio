@@ -1,49 +1,39 @@
-import { useRef, useState, useEffect } from 'react';
+import { useRef } from 'react';
 import './index.css';
-import Navbar from "./components/Navbar";
-import Home from './components/Home';
-import About from './components/About';
-import Skills from './components/Skills';
-import Projects from './components/Projects';
-import Contact from './components/Contact';
+import Navbar      from './Navbar';
+import Home        from './Home';
+import About       from './About';
+import Projects    from './Projects';
+import Skills      from './Skills';
+import Experience  from './Experience';
+import Contact     from './Contact';
 
 const App = () => {
-  const homeRef     = useRef(null);
-  const aboutRef    = useRef(null);
-  const skillsRef   = useRef(null);
-  const projectsRef = useRef(null);
-  const contactRef  = useRef(null);
+  const homeRef       = useRef(null);
+  const aboutRef      = useRef(null);
+  const projectsRef   = useRef(null);
+  const skillsRef     = useRef(null);
+  const experienceRef = useRef(null);
+  const contactRef    = useRef(null);
 
-  const [curX, setCurX] = useState(0);
-  const [curY, setCurY] = useState(0);
-  const [ringX, setRingX] = useState(0);
-  const [ringY, setRingY] = useState(0);
+  const scrollTo = ref =>
+    ref?.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
 
-  useEffect(() => {
-    const move = e => {
-      setCurX(e.clientX); setCurY(e.clientY);
-      setTimeout(() => { setRingX(e.clientX); setRingY(e.clientY); }, 80);
-    };
-    window.addEventListener('mousemove', move);
-    return () => window.removeEventListener('mousemove', move);
-  }, []);
-
-  const scrollTo = ref => ref?.current?.scrollIntoView({ behavior:'smooth', block:'start' });
-  const refs = { homeRef, aboutRef, skillsRef, projectsRef, contactRef };
+  const refs = {
+    homeRef, aboutRef, projectsRef,
+    skillsRef, experienceRef, contactRef,
+  };
 
   return (
-    <>
-      {/* Custom cursor */}
-      <div style={{ position:'fixed', left:curX, top:curY, width:8, height:8, background:'var(--blood)', borderRadius:'50%', pointerEvents:'none', zIndex:99999, transform:'translate(-50%,-50%)', transition:'transform .1s' }} />
-      <div style={{ position:'fixed', left:ringX, top:ringY, width:30, height:30, border:'1.5px solid var(--ink)', borderRadius:'50%', pointerEvents:'none', zIndex:99998, transform:'translate(-50%,-50%)', transition:'all .12s ease' }} />
-
+    <div style={{ background: 'var(--bg)', minHeight: '100vh' }}>
       <Navbar scrollTo={scrollTo} refs={refs} />
-      <section ref={homeRef}><Home scrollTo={scrollTo} refs={refs} /></section>
-      <section ref={aboutRef}><About /></section>
-      <section ref={skillsRef}><Skills /></section>
-      <section ref={projectsRef}><Projects /></section>
-      <section ref={contactRef}><Contact /></section>
-    </>
+      <section ref={homeRef}>       <Home       scrollTo={scrollTo} refs={refs} /></section>
+      <section ref={aboutRef}>      <About /></section>
+      <section ref={projectsRef}>   <Projects /></section>
+      <section ref={skillsRef}>     <Skills /></section>
+      <section ref={experienceRef}> <Experience /></section>
+      <section ref={contactRef}>    <Contact /></section>
+    </div>
   );
 };
 
